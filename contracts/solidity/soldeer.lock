@@ -1,0 +1,5 @@
+[[dependencies]]
+name = "cross-chain-swap"
+version = "1.0.0"
+git = "https://github.com/1inch/cross-chain-swap.git"
+rev = "16d366f4ab33684576a503c92a603482f548c9c0"
