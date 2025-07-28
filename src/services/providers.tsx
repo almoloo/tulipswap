@@ -10,8 +10,10 @@ export default async function Providers({ children }: ProvidersProps) {
 	const cookies = headersObj.get('cookie');
 
 	return (
-		<WalletConnectProvider cookies={cookies}>
-			{children}
-		</WalletConnectProvider>
+		<>
+			<WalletConnectProvider cookies={cookies}>
+				{children}
+			</WalletConnectProvider>
+		</>
 	);
 }

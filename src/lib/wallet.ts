@@ -6,7 +6,7 @@ import {
 	TransactionRequest,
 	Wallet as PKWallet,
 } from 'ethers';
-import Sdk from '@1inch/cross-chain-sdk';
+import Sdk, { CrossChainOrder } from '@1inch/cross-chain-sdk';
 import ERC20 from '@/lib/ABI/IERC20.json';
 
 const coder = AbiCoder.defaultAbiCoder();
@@ -131,7 +131,7 @@ export class Wallet {
 
 	public async signOrder(
 		srcChainId: number,
-		order: Sdk.EvmCrossChainOrder
+		order: CrossChainOrder
 	): Promise<string> {
 		const typedData = order.getTypedData(srcChainId);
 

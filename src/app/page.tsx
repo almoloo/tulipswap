@@ -1,7 +1,17 @@
 'use client';
 
+import {
+	limitOrderProtocol,
+	NewNetworkEnum,
+	provider,
+	srcEscrowFactory,
+	tokens,
+} from '@/lib/constants';
+import { createOrder } from '@/lib/create-order';
 import { Wallet } from '@/lib/wallet';
-import { ethers } from 'ethers';
+import { uint8ArrayToHex } from '@1inch/byte-utils';
+import { SupportedChain, NetworkEnum, Address } from '@1inch/cross-chain-sdk';
+import { ethers, MaxUint256, randomBytes } from 'ethers';
 import { useEffect, useState } from 'react';
 import { useWalletClient } from 'wagmi';
 
@@ -13,18 +23,50 @@ export default function Home() {
 	const [fromAddress, setFromAddress] = useState('');
 	const [signer, setSigner] = useState<ethers.Signer | null>(null);
 
-	const provider = new ethers.JsonRpcProvider(
-		'https://polygon-pokt.nodies.app'
-	);
-
 	useEffect(() => {
 		if (!walletClient) return;
 		const pr = new ethers.BrowserProvider(walletClient.transport);
+		// const pr = new ethers.BrowserProvider();
 		pr.getSigner().then((s) => setSigner(s));
 	}, [walletClient]);
 
 	async function handleSwapClick() {
-		const srcChainUser: Wallet = new Wallet(signer!, provider);
+		const srcToken = tokens.filter((t) => t.name === 'USDC')[0];
+		const destToken = tokens.filter((t) => t.name === 'USDC')[0];
+		const srcChainId = NetworkEnum.POLYGON;
+		const dstChainId = NewNetworkEnum.APTOS as unknown as SupportedChain;
+
+		const srcTokenAddress = new Address(srcToken.addressPolygon);
+		const destTokenAddress = new Address(destToken.addressAptosFake);
+
+		const srcChainUser = new Wallet(signer!, provider);
+		// const destChainUser;
+		// const srcChainResolver = new Wallet()
+		// const destChainResolver;
+
+		const srcFactory = srcEscrowFactory;
+
+		// APPROVE TOKEN ON SRC
+		// await srcChainUser.approveToken(
+		// 	srcToken.addressPolygon,
+		// 	limitOrderProtocol.polygon,
+		// 	MaxUint256
+		// );
+
+		// GENERATE SECRET
+		const secret = uint8ArrayToHex(randomBytes(32)); // TODO: use crypto secure random number in real world
+
+		// CREATE ORDER
+		const order = await createOrder(
+			await srcChainUser.getAddress(),
+			srcTokenAddress,
+			destTokenAddress,
+			srcChainId,
+			dstChainId,
+			secret
+		);
+
+		console.log('🎈', order);
 	}
 	return (
 		<div className="m-5">
@@ -40,7 +82,7 @@ export default function Home() {
 					required
 				/>
 				<br />
-				<appkit-button />
+				{/* <appkit-button /> */}
 			</div>
 			{/* TO */}
 			<div className="border p-5">
