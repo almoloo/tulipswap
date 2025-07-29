@@ -8,6 +8,7 @@ import {
 	tokens,
 } from '@/lib/constants';
 import { createOrder } from '@/lib/create-order';
+import { NewAddress } from '@/lib/new-sdk';
 import { Wallet } from '@/lib/wallet';
 import { uint8ArrayToHex } from '@1inch/byte-utils';
 import { SupportedChain, NetworkEnum, Address } from '@1inch/cross-chain-sdk';
@@ -37,7 +38,9 @@ export default function Home() {
 		const dstChainId = NewNetworkEnum.APTOS as unknown as SupportedChain;
 
 		const srcTokenAddress = new Address(srcToken.addressPolygon);
-		const destTokenAddress = new Address(destToken.addressAptosFake);
+		const destTokenAddress = new NewAddress(
+			destToken.addressAptosFake
+		) as unknown as Address;
 
 		const srcChainUser = new Wallet(signer!, provider);
 		// const destChainUser;
@@ -67,6 +70,8 @@ export default function Home() {
 		);
 
 		console.log('🎈', order);
+
+		// SIGN ORDER
 	}
 	return (
 		<div className="m-5">

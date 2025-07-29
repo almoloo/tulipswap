@@ -1,6 +1,7 @@
 import { EscrowFactory } from '@/lib/escrow-factory';
 import { SupportedChains, Address } from '@1inch/cross-chain-sdk';
 import { ethers } from 'ethers';
+import { NewAddress } from './new-sdk';
 
 export enum NewNetworkEnum {
 	APTOS = SupportedChains[5],
@@ -60,6 +61,6 @@ export const srcEscrowFactory = new EscrowFactory(
 // 	}
 // );
 
-export const resolverAddress = new Address(
-	'0x11110000000000000000000000000000000000FF'
-);
+export const resolverAddress = new NewAddress(
+	'0x487e905f899ccb6d46fdaec56ba1e0c4cf119862a16c409904b8c78fab1f5e8a'
+) as unknown as Address;
