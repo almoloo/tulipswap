@@ -16,6 +16,7 @@ import { parseEther, parseUnits } from 'ethers';
 import { UINT_40_MAX } from '@1inch/byte-utils';
 
 export const createOrder = async (
+	srcSide: 'EVM' | 'APTOS',
 	srcUserAddress: string,
 	srcTokenAddress: Address,
 	destTokenAddress: Address,

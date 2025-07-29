@@ -38,9 +38,7 @@ export default function Home() {
 		const dstChainId = NewNetworkEnum.APTOS as unknown as SupportedChain;
 
 		const srcTokenAddress = new Address(srcToken.addressPolygon);
-		const destTokenAddress = new NewAddress(
-			destToken.addressAptosFake
-		) as unknown as Address;
+		const destTokenAddress = new Address(destToken.addressAptosFake);
 
 		const srcChainUser = new Wallet(signer!, provider);
 		// const destChainUser;
@@ -61,6 +59,7 @@ export default function Home() {
 
 		// CREATE ORDER
 		const order = await createOrder(
+			'EVM',
 			await srcChainUser.getAddress(),
 			srcTokenAddress,
 			destTokenAddress,
@@ -72,6 +71,10 @@ export default function Home() {
 		console.log('🎈', order);
 
 		// SIGN ORDER
+		const signature = await srcChainUser.signOrder(srcChainId, order);
+		const orderHash = order.getOrderHash(srcChainId);
+
+		console.log('🎈', signature, orderHash);
 	}
 	return (
 		<div className="m-5">
