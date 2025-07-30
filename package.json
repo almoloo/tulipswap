@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@1inch/byte-utils": "^3.1.0",
-    "@1inch/cross-chain-sdk": "^0.1.15-rc.0",
+    "@1inch/cross-chain-sdk": "^0.1.15",
+    "@aptos-labs/ts-sdk": "^3.1.3",
+    "@aptos-labs/wallet-adapter-react": "^7.0.3",
     "@reown/appkit": "^1.7.16",
     "@reown/appkit-adapter-wagmi": "^1.7.16",
     "@tanstack/react-query": "^5.83.0",

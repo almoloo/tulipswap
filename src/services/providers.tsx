@@ -1,5 +1,6 @@
 import WalletConnectProvider from '@/services/providers/wallet-connect';
 import { headers } from 'next/headers';
+import AptosWalletProvider from '@/services/providers/aptos-wallet';
 
 interface ProvidersProps {
 	children: React.ReactNode;
@@ -12,7 +13,7 @@ export default async function Providers({ children }: ProvidersProps) {
 	return (
 		<>
 			<WalletConnectProvider cookies={cookies}>
-				{children}
+				<AptosWalletProvider>{children}</AptosWalletProvider>
 			</WalletConnectProvider>
 		</>
 	);

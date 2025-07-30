@@ -34,14 +34,19 @@ export const tokens: Array<TokenInfo> = [
 	},
 ];
 
+export const aptosAddresses = [
+	{
+		real: '0x487e905f899ccb6d46fdaec56ba1e0c4cf119862a16c409904b8c78fab1f5e8a',
+		dummy: '0x3333333333333333333333333333333336660006',
+	},
+];
+
 export const limitOrderProtocol = {
 	polygon: '0x94bc2a1c732bcad7343b25af48385fe76e08734f',
 	ethereum: '0x119c71d3bbac22029622cbaec24854d3d32d2828',
 };
 
-export const provider = new ethers.JsonRpcProvider(
-	'https://polygon-pokt.nodies.app'
-);
+export const provider = new ethers.JsonRpcProvider('https://polygon-rpc.com');
 
 export const srcEscrowFactoryAddress =
 	'0xa7bCb4EAc8964306F9e3764f67Db6A7af6DdF99A';
@@ -61,6 +66,6 @@ export const srcEscrowFactory = new EscrowFactory(
 // 	}
 // );
 
-export const resolverAddress = new NewAddress(
-	'0x487e905f899ccb6d46fdaec56ba1e0c4cf119862a16c409904b8c78fab1f5e8a'
-) as unknown as Address;
+export const resolverAddress = new Address(
+	'0x3333333333333333333333333333333336660006'
+);

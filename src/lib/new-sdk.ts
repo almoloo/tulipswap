@@ -4,7 +4,9 @@ import assert from 'assert';
 import { isAddress } from 'ethers';
 
 function isAptosAddress(val: string): boolean {
-	return /^0x[0-9a-fA-F]{64}$/.test(val);
+	return /^0x[0-9a-fA-F]{64}(::[a-zA-Z_][a-zA-Z0-9_]*::[a-zA-Z_][a-zA-Z0-9_]*)?$/.test(
+		val
+	);
 }
 
 export class NewAddress {
