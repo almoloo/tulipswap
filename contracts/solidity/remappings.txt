@@ -1,1 +1,1 @@
-cross-chain-swap/=dependencies/cross-chain-swap-1.0.0/contracts
+cross-chain-swap/=dependencies/cross-chain-swap-1.0.0

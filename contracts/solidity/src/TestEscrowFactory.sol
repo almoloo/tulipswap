@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.23;
 
-import "cross-chain-swap/EscrowFactory.sol";
+import "cross-chain-swap/contracts/EscrowFactory.sol";
 
 contract TestEscrowFactory is EscrowFactory {
     constructor(

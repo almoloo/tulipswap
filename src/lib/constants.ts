@@ -69,3 +69,5 @@ export const srcEscrowFactory = new EscrowFactory(
 export const resolverAddress = new Address(
 	'0x3333333333333333333333333333333336660006'
 );
+
+export const evmChainRpc = '';

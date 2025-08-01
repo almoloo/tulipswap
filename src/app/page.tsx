@@ -7,6 +7,7 @@ import {
 	tokens,
 } from '@/lib/constants';
 import { createOrder } from '@/lib/create-order';
+import { Resolver } from '@/lib/resolver';
 import saveAddress from '@/lib/save-address';
 import { Wallet } from '@/lib/wallet';
 import { uint8ArrayToHex } from '@1inch/byte-utils';
@@ -76,6 +77,9 @@ export default function Home() {
 		const orderHash = order.getOrderHash(srcChainId);
 
 		console.log('🎈', signature, orderHash);
+
+		// RESOLVER FILLING
+		// const resolverContract = new Resolver()
 	}
 
 	async function handleAPTOSClick() {
