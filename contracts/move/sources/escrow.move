@@ -10,13 +10,14 @@ module swipe_addr::escrow {
     use aptos_framework::coin;
     use aptos_framework::aptos_coin::AptosCoin;
 
-    struct Escrow has key, store{
+    struct Escrow has key, store, drop{
         sender: address,
         recipient: address,
         hashlock: vector<u8>, // hash of secret
         amount: u64,
         deadline: u64, // Unix timestamp
         claimed: bool,
+        safety_deposit: u64,
     }
 
     struct CoinStore has key {
@@ -45,11 +46,13 @@ module swipe_addr::escrow {
         recipient: address,
         hashlock: vector<u8>,
         amount: u64,
-        deadline: u64
+        deadline: u64,
+        safety_deposit: u64
     ) acquires EscrowStore, CoinStore {
         assert!(deadline > timestamp::now_seconds(), error::invalid_argument(0));
 
-        let withdrawCoin = coin::withdraw<AptosCoin>(sender, amount);
+        let total_amount = amount + safety_deposit;
+        let withdrawCoin = coin::withdraw<AptosCoin>(sender, total_amount);
 
         let escrow = Escrow {
             sender: signer::address_of(sender),
@@ -58,6 +61,7 @@ module swipe_addr::escrow {
             amount,
             deadline,
             claimed: false,
+            safety_deposit,
         };
 
         let store = borrow_global_mut<EscrowStore>(signer::address_of(sender));
@@ -70,13 +74,13 @@ module swipe_addr::escrow {
     }
 
     public fun claim(
-        claimer: &signer,
+        collector: &signer,
+        claimer_addr: address,
         sender_address: address,
         secret: String,
     ) acquires EscrowStore, CoinStore {
         let store = borrow_global_mut<EscrowStore>(sender_address);
         let now = timestamp::now_seconds();
-        let claimer_addr = signer::address_of(claimer);
 
         let i = 0;
         let len = vector::length(&store.escrows);
@@ -96,13 +100,13 @@ module swipe_addr::escrow {
                 escrow_ref.claimed = true;
 
                 let coin_store = borrow_global_mut<CoinStore>(sender_address);
+
                 let withdrawCoin = coin::extract<AptosCoin>(&mut coin_store.coins, escrow_ref.amount);
-
-                let claimer_addr = signer::address_of(claimer);
+                let withdrawCoinSafty = coin::extract<AptosCoin>(&mut coin_store.coins, escrow_ref.safety_deposit);
                 coin::deposit<AptosCoin>(claimer_addr, withdrawCoin);
-
-
+                coin::deposit<AptosCoin>(signer::address_of(collector), withdrawCoinSafty);
             
+                vector::swap_remove(&mut store.escrows, i);
                 return;
             };
             i = i + 1;
@@ -111,9 +115,10 @@ module swipe_addr::escrow {
     }
 
     public fun cancel (
-        sender: &signer,
+        collector: &signer,
+        sender_address: address,
     ) acquires EscrowStore, CoinStore {
-        let store = borrow_global_mut<EscrowStore>(signer::address_of(sender));
+        let store = borrow_global_mut<EscrowStore>(sender_address);
         let now = timestamp::now_seconds();
 
         let i = 0;
@@ -121,16 +126,21 @@ module swipe_addr::escrow {
         while (i < len) {
             let escrow_ref = vector::borrow_mut(&mut store.escrows, i);
             if (
-                escrow_ref.sender == signer::address_of(sender) &&
+                escrow_ref.sender == sender_address &&
                 !escrow_ref.claimed &&
                 now > escrow_ref.deadline
             ) {
                 escrow_ref.claimed = true;
 
                 let coin_store = borrow_global_mut<CoinStore>(escrow_ref.sender);
+
                 let withdrawCoin = coin::extract<AptosCoin>(&mut coin_store.coins, escrow_ref.amount);
+                let withdrawCoinSafty = coin::extract<AptosCoin>(&mut coin_store.coins, escrow_ref.safety_deposit);
 
                 coin::deposit<AptosCoin>(escrow_ref.sender, withdrawCoin);
+                coin::deposit<AptosCoin>(signer::address_of(collector), withdrawCoinSafty);
+
+                vector::swap_remove(&mut store.escrows, i);
 
                 return;
             };

@@ -1,5 +1,5 @@
 #[test_only]
-module swipe_addr::test_end_to_end {
+module swipe_addr::test_escrow {
     use std::vector;
     use std::signer;
     use std::string;
@@ -19,7 +19,7 @@ module swipe_addr::test_end_to_end {
     const E_INVALID_CONTRACT_BALANCE: u64 = 104;
 
     #[test(alice = @0x1, bob = @0x2, aptos_framework = @aptos_framework)]
-    public fun test_end_to_end(alice: &signer, bob: &signer, aptos_framework: &signer) {
+    public fun test_escrow(alice: &signer, bob: &signer, aptos_framework: &signer) {
 
         let alice_addr = signer::address_of(alice);
 
@@ -53,7 +53,8 @@ module swipe_addr::test_end_to_end {
             signer::address_of(bob),
             hash,
             10_000,
-            timeout
+            timeout,
+            100,
         );
 
         escrow::create_escrow(
@@ -61,7 +62,8 @@ module swipe_addr::test_end_to_end {
             signer::address_of(bob),
             hash2,
             5_000,
-            timeout
+            timeout,
+            100,
         );
 
         // check escrow exist
@@ -70,15 +72,15 @@ module swipe_addr::test_end_to_end {
 
         // check claim
         let bob_initial_balance = coin::balance<AptosCoin>(bob_address);
-        escrow::claim(bob, alice_addr, secret);
+        escrow::claim(bob, bob_address, alice_addr, secret);
         let bob_final_balance = coin::balance<AptosCoin>(bob_address);
-        assert!(bob_final_balance - bob_initial_balance == 10_000, E_INVALID_BALANCE);
+        assert!(bob_final_balance - bob_initial_balance == 10_100, E_INVALID_BALANCE);
 
         // escrow::claim(bob, alice_addr, secret2); 
         timestamp::update_global_time_for_test(timestamp::now_microseconds() + 7200 * 1000000);
 
         let alice_initial_balance = coin::balance<AptosCoin>(alice_addr);
-        escrow::cancel(alice);
+        escrow::cancel(bob, alice_addr);
         let alice_final_balance = coin::balance<AptosCoin>(alice_addr);
         assert!(alice_final_balance - alice_initial_balance == 5_000, E_INVALID_BALANCE);
     }
