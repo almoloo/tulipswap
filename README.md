@@ -1,3 +1,13 @@
+## ⚠️ Disclaimer
+
+> This project was developed during the [Unite DeFi Hackathon](https://dorahacks.io/hackathon/aptos-ctrlmove-hackathon/) by 1inch.
+>
+> While our goal was to implement full **cross-chain functionality involving non-EVM chains** using the 1inch SDK and Fusion+ protocol, the SDK was not yet fully ready to support such integrations at the time of development.
+>
+> During the hackathon, several updates to the SDK addressed critical issues, but also introduced **breaking changes** that led to significant delays and inconsistencies—both with other related libraries and with the official examples provided.
+>
+> As a result, the project remains incomplete. We appreciate the efforts of the 1inch team and the hackathon organizers, and we hope to build on this foundation and participate in future hackathons hosted by 1inch with a more mature and production-ready toolchain.
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
